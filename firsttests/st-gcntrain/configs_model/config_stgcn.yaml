@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────
+# Конфигурация эксперимента ST-GCN / BIISC
+# Запуск: python train_stgcn_biisc.py --config config_stgcn.yaml
+# ─────────────────────────────────────────────
+
+experiment_name: "stgcn_biisc_yolov8n_v1"
+
+paths:
+  keypoints_dir: "../keypoints/yolov8n-pose"   # папка с .npz файлами
+  results_dir:   "runsstgcn"                      # сюда пойдут чекпоинты + TensorBoard
+
+data:
+  test_subjects:    ["S002", "S003", "S004", "S005", "S006"]
+  target_actions:   ["COUG", "SNEE"]   # приоритетные классы в отчётах
+  use_hf:           true               # включать HF-версии при обучении
+  val_split:        0.15               # доля train → val (стратифицировано)
+  max_frames:       50                 # паддить / обрезать (10fps × ~5s)
+  in_channels:      3                  # 2=(x,y)  |  3=(x,y,conf)
+  noise_std:        0.02               # σ гауссова шума при аугментации (0=выкл)
+
+model:
+  num_joints:       17
+  hidden_channels:  [64, 64, 128, 128, 256]
+  dropout:          0.4
+  tcn_kernel_size:  9
+  stride_at:        [2, 4]   # temporal downsample на 3-м и 5-м блоке
+
+training:
+  batch_size:                  16
+  num_epochs:                  60
+  learning_rate:               0.001
+  weight_decay:                0.0001
+  scheduler:                   "step"   # "step" | "cosine"
+  scheduler_step:              20
+  scheduler_gamma:             0.5
+  grad_clip:                   1.0
+  early_stopping_patience:     15       # -1 = отключить
+
+gpu:
+  gpu_id:       0
+  num_workers:  0        # 0 для Windows; 4+ для Linux/macOS
+  pin_memory:   true
+
+tensorboard:
+  log_histograms:  false   # гистограммы весов/градиентов (медленно)
+  cm_every_n:      10      # confusion matrix каждые N эпох

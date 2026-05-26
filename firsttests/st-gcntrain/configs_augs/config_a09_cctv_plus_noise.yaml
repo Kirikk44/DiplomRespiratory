@@ -1,0 +1,53 @@
+experiment_name: "a09_cctv_plus_noise"
+paths:
+  keypoints_dir: "../keypoints/yolov8n-pose"
+  results_dir:   "runs"
+data:
+  test_subjects: ["S002","S003","S004","S005","S006"]
+  use_hf: true
+  val_split: 0.15
+  max_frames: 50
+  in_channels: 3
+
+# CCTV + шум — наиболее реалистичный сценарий реального видеонаблюдения
+# Камера стоит под углом И детекция несовершенна
+augmentation:
+  noise_std:           0.025
+  joint_dropout:       true
+  joint_dropout_prob:  0.10
+  conf_noise:          true
+  conf_noise_std:      0.08
+  temporal_crop:       false
+  temporal_speed:      false
+  rotate_2d:           true
+  rotate_range:        [-15, 15]
+  perspective_x:       true
+  perspective_x_range: [-0.15, 0.15]
+  perspective_y:       true
+  perspective_y_range: [-0.10, 0.10]
+  zoom:                false
+  translate:           false
+  horizontal_flip:     false
+  scale_bones:         false
+
+model:
+  num_joints:      17
+  hidden_channels: [64, 64, 128, 128, 256]
+  dropout:         0.5
+  tcn_kernel_size: 9
+  stride_at:       [3]
+training:
+  batch_size: 16
+  num_epochs: 60
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: "cosine"
+  grad_clip: 1.0
+  early_stopping_patience: 15
+gpu:
+  gpu_id: 0
+  num_workers: 0
+  pin_memory: true
+tensorboard:
+  log_histograms: false
+  cm_every_n: 10

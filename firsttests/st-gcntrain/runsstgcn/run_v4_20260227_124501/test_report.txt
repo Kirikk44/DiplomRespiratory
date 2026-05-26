@@ -1,0 +1,14 @@
+              precision    recall  f1-score   support
+
+        CALL       0.41      0.55      0.47        60
+        COUG       0.49      0.53      0.51        60
+        DRIN       0.63      0.63      0.63        60
+        SCRA       0.41      0.37      0.39        60
+        SNEE       0.49      0.60      0.54        60
+        STRE       0.79      0.37      0.50        60
+        WAVE       0.64      0.48      0.55        60
+        WIPE       0.72      0.90      0.80        60
+
+    accuracy                           0.55       480
+   macro avg       0.57      0.55      0.55       480
+weighted avg       0.57      0.55      0.55       480

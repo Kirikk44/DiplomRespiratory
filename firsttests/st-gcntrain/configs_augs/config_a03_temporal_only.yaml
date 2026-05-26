@@ -1,0 +1,48 @@
+experiment_name: "a03_temporal_only"
+paths:
+  keypoints_dir: "../keypoints/yolov8n-pose"
+  results_dir:   "runs"
+data:
+  test_subjects: ["S002","S003","S004","S005","S006"]
+  use_hf: true
+  val_split: 0.15
+  max_frames: 50
+  in_channels: 3
+
+# Только временные аугментации — разная фаза и скорость действия
+augmentation:
+  noise_std:          0.0
+  joint_dropout:      false
+  conf_noise:         false
+  temporal_crop:      true
+  temporal_speed:     true
+  speed_range:        [0.7, 1.3]
+  rotate_2d:          false
+  perspective_x:      false
+  perspective_y:      false
+  zoom:               false
+  translate:          false
+  horizontal_flip:    false
+  scale_bones:        false
+
+model:
+  num_joints:      17
+  hidden_channels: [64, 64, 128, 128, 256]
+  dropout:         0.5
+  tcn_kernel_size: 9
+  stride_at:       [3]
+training:
+  batch_size: 16
+  num_epochs: 60
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: "cosine"
+  grad_clip: 1.0
+  early_stopping_patience: 15
+gpu:
+  gpu_id: 0
+  num_workers: 0
+  pin_memory: true
+tensorboard:
+  log_histograms: false
+  cm_every_n: 10
