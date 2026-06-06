@@ -5,3 +5,8 @@
 
 ## Проверка инференса модели
 
+Запуск:
+
+```python
+python ./inference/inference_cam.py --checkpoint ./modelsbest_model.pt --camera 0  
+```
